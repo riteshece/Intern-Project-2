@@ -18,11 +18,11 @@ const createCollege = async function (req, res) {
 
         }
         if (!fullName) {
-            return res.status(400).send({ status: false, msg: "please provide a valid email" })
+            return res.status(400).send({ status: false, msg: "please provide a valid fullName" })
 
         }
         if (!logoLink) {
-            return res.status(400).send({ status: false, msg: "please provide a valid link" })
+            return res.status(400).send({ status: false, msg: "please provide a valid logoLink" })
 
         }
         const college = await collegeModel.create(req.body)
@@ -42,7 +42,6 @@ const createIntern = async function (req, res) {
     try {
       const data = req.body
 
-      
       if (!data.name) {
         return res.status(400).send({ status: false, msg: "BAD REQUEST please provide valid name" })
       }
@@ -73,17 +72,24 @@ const createIntern = async function (req, res) {
 const getCollegeDetails= async function(req,res){
   try{
       let data=req.query.collegeName;
+
       if(!data) return res.status(400).send({status:false, message:"Please Enter your college name"})
+
       let data1 = data.toLowerCase().trim();
+
       let college=await collegeModel.findOne({name:data1,isDeleted:false}).select({isDeleted:0,createdAt:0,updatedAt:0,__v:0})
+
       if(!college) return res.status(404).send({status:false, message:"No such college in our DB"})
+
       let internData=await internModel.find({collegeId:college._id,isDeleted:false}).select({_id:1,email:1,mobile:1,name:1})
       
       let college1 = JSON.parse(JSON.stringify(college))
+
       /*While using spread operator to copy the object in college variable, a lot of garbage values were being printed.
       Also I was not able to directly manipulate the college object which we got by using findOne on mongoDB documents. Therefore,
       I used he syntax for deep copy.*/
       delete college1._id
+      
       college1.interns = [...internData];
       return res.status(200).send({status:true, data:college1})
   }catch(error){

@@ -3,21 +3,25 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const internSchema= new mongoose.Schema(
     {
-        name: {type:String,require:true,unique:true},
-        email: {type:String,require:true,unique:true,validate: {
+        name: {type:String,
+             require:true,
+             unique:true},
+        email: {type:String,
+                require:true,
+                unique:true,validate: {
           validator: function (email) {
-              if (/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email)) {
+        if (/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email)) {
                   return (true)
               }
               alert("You have entered an invalid email address!")
               return (false)
           } }},
 
-         mobile: {
+        mobile: {
         type: Number,
         unique: true,
         validate: {
-            validator: function (mobile) {
+        validator: function (mobile) {
                 if (/^\d{10}$/.test(mobile)) {
                     return (true)
                 } else {
